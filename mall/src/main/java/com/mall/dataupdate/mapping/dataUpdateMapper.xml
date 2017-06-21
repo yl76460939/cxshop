@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mall.dataupdate.dao.DataUpdateDao">
+
+	<resultMap type="com.mall.dataupdate.bean.DataUpdateType" id="annoMap">  
+        <id column="typeId" property="id"/>  
+        <result column="name" property="name"/> 
+        <result column="value" property="value"/> 
+        <result column="updateCycle" property="updateCycle"/>
+        <result column="isMultipleCity" property="isMultipleCity"/>  
+        <collection property="annoList" column="dataTypeId" ofType="com.mall.dataupdate.bean.DataUpdateAnno">  
+            <id column="annoId" property="id"/>  
+            <result column="cityId" property="cityId"/> 
+            <result column="cityName" property="cityName"/>
+            <result column="dataUpdateTime" property="dataUpdateTime"/>  
+        </collection>  
+    </resultMap>
+    
+    <update id="updateDataAnno">  
+          <foreach collection="params" item="item" index="index" separator=";">  
+                update [Config].[dbo].[dc_index_dataUpdateAnno]  
+                <set>  
+                  dataUpdateTime = '${item.dataUpdateTime}',
+	    		  lastUpdateTime = '${item.lastUpdateTime}',
+	              lastUpdateUserId = '${item.lastUpdateUserId}'
+                </set>  
+                 where cityId = '${item.cityId}'
+	     			and dataTypeId = '${item.dataTypeId}'
+         </foreach>  
+            
+    </update>
+    
+    <!-- 批量插入所选城市  -->
+    <insert id="insertDataUpdateAnno">
+    	insert into [Config].[dbo].[dc_index_dataUpdateAnno](
+        dataTypeId ,cityId,isMultipleCity,createTime,createUserId
+        ,lastUpdateTime,lastUpdateUserId,rowState,isPublish,dataUpdateTime) 
+		<foreach collection="paramList" item="item" separator=" union all " >
+			select '${item.dataTypeId}','${item.cityId}','${item.isMultipleCity}','${item.createTime}',
+			'${item.createUserId}','${item.lastUpdateTime}','${item.lastUpdateUserId}','${item.rowState}',
+			'${item.isPublish}','${item.dataUpdateTime}'
+		</foreach>
+    </insert>
+    
+	<!-- [Config]..dc_index_dataUpdateType -->
+	<select id="selectUpdateType" resultType="HashMap">
+		select * From [Config]..dc_index_dataUpdateType where rowState > -1 order by orderBy
+	</select>
+	
+	<select id="selectActiveCity" resultType="HashMap">
+	    select b.areaName cityId,b.areaName cityName,b.areaNum  
+	    From [Config].[dbo].dc_public_activeCity a
+	    left join [Config].[dbo].[dc_dim_city] b
+	    on a.cityId = b.areaNum
+	    where a.rowstate > -1
+	    order by a.orderby
+	</select>
+	
+	<select id="selectInitInfo" resultMap="annoMap">
+		
+		select datatype.id typeId,
+	    datatype.name,datatype.value,
+	    datatype.updateCycle,datatype.isMultipleCity,
+	    active.cityId,active.cityName,
+	    anno.id annoId,anno.dataTypeId,anno.dataUpdateTime
+	    from [Config]..dc_index_dataUpdateType datatype 
+	    left join [Config].[dbo].[dc_index_dataUpdateAnno] anno
+	    on anno.dataTypeId = datatype.id
+	    and anno.rowState > -1 
+	    and anno.isPublish = 1
+	    left join [Config].[dbo].dc_public_activeCity active
+	    on anno.cityId = active.cityId
+	    and active.rowState > -1
+	    where datatype.rowState >-1
+	    order by datatype.orderBy,active.orderBy
+	    
+	</select>
+	
+	<select id="selectCityInfoByDataType" resultType="HashMap">
+	    select b.areaNum cityId,b.areaName cityName,b.areaNum  
+	    ,isnull(c.id,0) selected,
+	    CONVERT(nvarchar(10),c.lastUpdateTime,120) time,a.orderBy orderByNum
+	    From [Config].[dbo].dc_public_activeCity a
+	    left join [Config].[dbo].[dc_dim_city] b
+	    on a.cityId = b.areaNum
+	    left join [Config].[dbo].[dc_index_dataUpdateAnno] c
+        on c.cityId = b.areaNum 
+        and dataTypeId = #{typeId,jdbcType=VARCHAR}
+	    where a.rowstate > -1 
+	    and a.cityId != '100000'
+	    and exists (
+	    select 1 from [Config].[dbo].dc_index_dataUpdateType z
+	    where z.isMultipleCity = 1 and value = #{typeId,jdbcType=VARCHAR}
+	    )
+	    union 
+	    select 
+	    '100000' cityId,'全国' cityName,'100000' areaNum,
+	    isnull(an.id,0) selected,
+	    CONVERT(nvarchar(10),an.lastUpdateTime,120) time,
+	    1 orderByNum
+	    From [Config].[dbo].dc_index_dataUpdateType type
+	    left join [Config].[dbo].[dc_index_dataUpdateAnno] an
+	    on type.rowState > -1 and type.value = an.dataTypeId
+	    where type.isMultipleCity != 1
+	    and type.value = #{typeId,jdbcType=VARCHAR}
+	    order by orderByNum
+	</select>
+	
+</mapper>

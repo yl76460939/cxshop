@@ -1,0 +1,79 @@
+@charset "utf-8";
+
+body{
+	font-family: 'Microsoft yahei', 微软雅黑, Arial
+}
+.fa-tag{
+	font-size:22px !important;
+	margin: 0 10px;
+}
+
+.page-header{
+	margin:0;
+	margin-top: 10px;
+	font-size:18px;
+	font-family: 'Microsoft yahei', 微软雅黑, Arial
+}
+
+.box-header{
+	padding-bottom: 0;
+}
+.detail-item{
+}
+
+.detail-item:hover {
+    color: #3ca5f6;
+    text-decoration: underline;
+}
+#addFaqContent{
+	font-size:14px;
+	margin-right:5px;
+	margin:0px 5px 0 0;
+	cursor:pointer;
+}
+
+#addFaqContent>i{
+	padding-right:3px;
+}
+
+.colorBlock{
+	width:18px;
+	height: 18px;
+	display:inline-block;
+}
+
+.panel-default{
+	background-color: #f9f9f9;
+	border:1px solid #e0e0e0;
+}
+
+.panel-success{
+	background-color: #dff0d8;
+	border: 1px solid #d6e9c6;
+}
+
+.panel-warning{
+	background-color: #fcf8e3;
+	border: 1px solid #faebcc;
+}
+
+.panel-danger{
+	background-color: #f2dede;
+	border: 1px solid #ebccd1;
+}
+
+.ellipsis-col{
+	width:290px !important;
+	overflow:hidden;
+	text-overflow:ellipsis;
+	white-space:nowrap;
+}
+
+.callout-info{
+	font-size:16px;
+}
+
+.isNum{
+	font-family: georgia;
+	font-size:16px;
+}

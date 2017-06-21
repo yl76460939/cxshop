@@ -1,0 +1,213 @@
+.inputTxtArea {
+	resize: none;
+	outline: 0;
+	padding:5px;
+	border: 0px solid rgba(239, 239, 239, .5);
+	box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+    -ms-box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+    -mos-box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+    width: 700px;
+    /*box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 5px;*/
+}
+
+.invoice {
+	margin: 0;
+	padding: 10px 20px;
+	min-height: 600px;
+}
+
+.page-header .fa-user {
+    font-size: 22px !important;
+}
+
+.txtTest{
+	width:100%;
+	height:50px;
+	border: 1px solid #ccc;
+}
+
+.show-item-area{
+	padding-top: 10px;
+}
+
+.show-item-area table{
+	border-spacing: 10px 5px;
+    border-collapse: separate;
+    border-top: 1px solid rgba(239, 239, 239, .7);
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 5px;
+}
+
+.show-item-area tr td:nth-child(1){
+	width: 150px;
+}
+
+.show-item-area tr td:nth-child(2){
+	width: 250px;
+}
+
+.show-item-area th{
+	padding: 5px;
+	text-align: center;
+}
+
+.show-item-area td[phoneno]:hover{
+	box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+    -ms-box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+    -mos-box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+}
+
+.show-item-area tr td{
+    border-radius: 2px !important;
+	text-align: center;
+	padding: 5px 5px;
+}
+
+.show-item-area tr td:nth-child(3){
+	width: 350px;
+	text-align: left;
+}
+
+.show-item-area tr:nth-child(even) td/* :not(:nth-child(3)) */{
+	background: #e8f2fe;
+}
+
+.transition {
+    -webkit-transition: all .5s ease-out;
+    -moz-transition: all .5s ease-out;
+    -ms-transition: all .5s ease-out;
+    -o-transition: all .5s ease-out;
+    transition: all .5s ease-out;
+}
+
+.checkbutton{
+	color: white;
+	width: 50px;
+	background-color: #f0c800;
+	border: 1px solid #f0c800;
+	border-radius: 2px !important;
+	vertical-align: bottom;
+	outline: 0;
+	position: absolute;
+    left: 655px;
+    bottom: 10px;
+}
+
+.checkbutton:hover{
+	background-color: rgba(240, 200, 0, .7);
+}
+
+.floating-btn {
+	opacity:0 ;
+    background: rgb(64, 210, 255);
+    width: 60px;
+    height: 60px;
+    border-radius: 4px;
+    color: #fff;
+    font-size: 32px;
+    border: none;
+    position: absolute;
+    -webkit-transition: 0.3s;
+    transition: 0.3s;
+    margin: auto;
+    right: 150px;
+    bottom: 5px;
+    cursor: pointer;
+    outline: 0;
+}
+
+.icon-arrow {
+    position: relative;
+    width: 13px;
+    height: 13px;
+    border-right: 3px solid #fff;
+    border-top: 3px solid #fff;
+    display: block;
+    -ms-transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+    transform: rotate(45deg);
+    margin: auto;
+    -webkit-transition: 0.3s;
+    transition: 0.3s;
+}
+
+.icon-arrow:after {
+    content: '';
+    position: absolute;
+    width: 18px;
+    height: 3px;
+    background: #fff;
+    left: -5px;
+    top: 5px;
+    -ms-transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+}
+
+.floating-btn:hover {
+    box-shadow: 0 0 0 rgba(0, 0, 0, 0.3) inset, 0 3px 6px rgba(0, 0, 0, 0.16), 0 5px 11px rgba(0, 0, 0, 0.23);
+}
+
+.col-md-12 ::-webkit-scrollbar-thumb {
+	border-radius: 10px;
+	background: rgba(0, 0, 0, .2)
+}
+
+.col-md-12 ::-webkit-scrollbar-thumb:window-inactive {
+	background: rgba(0, 0, 0, .1)
+}
+
+.col-md-12 ::-webkit-scrollbar-thumb:vertical:hover {
+	background-color: rgba(0, 0, 0, .3)
+}
+
+.col-md-12 ::-webkit-scrollbar-thumb:vertical:active {
+	background-color: rgba(0, 0, 0, .5)
+}
+
+.col-md-12 ::-webkit-scrollbar {
+	width: 8px;
+	height: 10px
+}
+
+.page-header{
+	font-size: 18px;
+}
+
+.page-header span{
+	font-size: 14px;
+	color: #ddd;
+}
+
+.prompt-title{
+	height: 24px;
+	margin-top: 10px;
+	opacity: 0;
+	font-weight: 600;
+}
+
+.prompt-title i{
+	display: inline-block;
+	width: 8px;
+	height: 24px;
+	background-color: #f0c800;
+	border-radius: 5px !important;
+	vertical-align: bottom;
+}
+
+.prompt-title>span{
+	font-size: 14px;
+	display: inline-block;
+	margin-left: 5px;
+	height: 24px;
+	line-height: 24px;
+	vertical-align: bottom;
+	border-bottom: 1px solid #ccc;
+}
+
+.prompt-title .count{
+	color: #111;
+}
+
+.prompt-title .invalid{
+	color: red;
+}

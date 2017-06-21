@@ -1,0 +1,12 @@
+@charset "utf-8";
+
+body{
+	font-family: 'Microsoft yahei', 微软雅黑, Arial
+}
+
+#addUpdateRecord{
+	font-size:14px;
+	margin-right:5px;
+	margin:0px 5px 0 0;
+	cursor:pointer;
+}

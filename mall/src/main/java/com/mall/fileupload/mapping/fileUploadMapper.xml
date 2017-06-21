@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mall.fileupload.dao.FileUploadDao">
+	
+	<insert id="insertFileInfo" useGeneratedKeys="true" keyProperty="fModel.id">
+		insert into [Config].[dbo].[dc_upload_file]( 
+		 type, url, originalName, name, size ,cost
+		)values(
+			#{fModel.type,jdbcType=VARCHAR},
+			#{fModel.url,jdbcType=VARCHAR},
+			#{fModel.originalName,jdbcType=VARCHAR},
+			#{fModel.name,jdbcType=VARCHAR},
+			#{fModel.size},
+			#{fModel.cost,jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<select id="selectFileInfo" resultType="java.util.HashMap">
+		SELECT TOP (1) *
+		FROM [Config].[dbo].[dc_upload_file]
+		where id = #{id}
+		and rowstate > 0
+	</select>
+	
+</mapper>

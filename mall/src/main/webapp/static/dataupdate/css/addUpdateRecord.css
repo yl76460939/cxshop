@@ -1,0 +1,235 @@
+@CHARSET "UTF-8";
+
+.checkbox-ul{
+	margin: 0;
+	padding: 0;	
+}
+
+.checkbox-ul>li{
+	float:left;
+	padding:5px;
+	line-height:28px;
+	list-style: none;
+	cursor: pointer;
+}
+
+.content-items .checkbox-ul>li:hover{
+	background-color: #f0f0f0;
+}
+
+.checkbox-ul>li.m i{
+	background:url('../../main/images/index-selected.png') no-repeat -276px -26px;
+	width: 16px;
+	height: 16px;
+	display: inline-block;
+	vertical-align:middle;
+	margin: -1px 5px 0 3px;
+}
+
+.checkbox-ul>li.m.selected i{
+	background:url('../../main/images/index-selected.png') no-repeat -276px -78px;
+	width: 16px;
+	height: 16px;
+	display: inline-block;
+	vertical-align:middle;
+	margin: -1px 5px 0 3px;
+}
+
+.checkbox-ul>li.m:hover:not(.selected) i{
+	background: url(../../main/images/index-selected.png) no-repeat -276px -52px;
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    vertical-align: middle;
+    margin: -1px 5px 0 3px;
+}
+
+.background {
+	background-color: #f0f0f0;
+}
+
+.content-items td {
+	padding: 5px;
+	line-height: 24px;
+	white-space: normal;
+	font-family: 'Microsoft yahei', 微软雅黑, Arial;
+	font-size: 14px;
+}
+
+.content-items td:nth-child(1),.content-items td:nth-child(3) {
+	width: 15%;
+	color: #999;
+	/* vertical-align: top; */
+	text-align: right;
+}
+
+.content-items td:nth-child(2),.content-items td:nth-child(4) {
+	width: 35%
+}
+
+.content-items .alone td:first-child {
+	width: 20%;
+	color: #999;
+	/* vertical-align: top; */
+	text-align: right;
+}
+
+.content-items .alone td:last-child {
+	width: 80%
+}
+
+#hander {
+	width: 185px;
+}
+
+.content-items {
+	width: 95%;
+}
+
+.transition {
+    -webkit-transition: all .2s ease-out;
+    -moz-transition: all .2s ease-out;
+    -ms-transition: all .2s ease-out;
+    -o-transition: all .2s ease-out;
+    transition: all .2s ease-out;
+}
+
+.commit-btn{
+	font-size:14px;
+    width: 150px;
+    margin-bottom: 5px;
+    padding: 5px 10px;
+    background-color: #1CAAEC;
+    border: 2px solid #1CAAEC;
+    border-radius: 2px !important;
+    color:#fff;
+    cursor: pointer;
+}
+.laydate_box, .laydate_box *,.laydate-icon {
+        box-sizing:content-box;
+}
+.laydate-icon{
+	height: 22px;
+    line-height: 22px;
+    padding-right: 20px;
+    border: 1px solid #d2d6de;
+    background-color: #fff;
+    outline: 0;
+    padding-left:10px;
+    cursor:pointer;
+    width: 120px;
+}
+
+.main-title{
+	text-align:left !important;
+	height: 30px !important;
+	line-height: 30px !important;
+	padding-left: 60px !important;
+}
+
+.main-title label{
+	font-size: 16px !important;
+	color: #333 !important;
+}
+
+.content-items tr:not(:first-child){
+	
+}
+
+.content-items{
+	margin-bottom: 20px;	
+}
+.btn-area{
+	text-align: right;
+	width:80%;
+}
+
+.btn-area>button{
+	margin:20px 0 50px 0;
+}
+
+.border-bottom-dotted{
+	border-bottom: 1px dotted #ccc;
+}
+
+.apply-date{
+	margin-left: 5px;
+    color: #fff;
+    right: 0;
+    height: 24px;
+    min-width: 50px;
+    font-size: 12px;
+    text-align: center;
+    background: #1CAAEC;
+    cursor: pointer;
+    display: inline-block;
+    border-radius: 3px;
+}
+
+.addCity{
+	padding:0 3px;
+	margin-left: 5px;
+    color: #fff;
+    right: 0;
+    height: 24px;
+    min-width: 50px;
+    font-size: 12px;
+    text-align: center;
+    background: #1CAAEC;
+    cursor: pointer;
+    display: inline-block;
+    border-radius: 3px;
+    line-height: 18px;
+}
+
+.silver{
+	color: #999;	
+}
+
+.grf-plus{
+	font-weight: 600;
+	font-size: 18px;
+}
+
+.tprompt-btn-area{
+	text-align:right;
+}
+
+.tprompt-btn-area>span{
+	margin-right: 5px;
+    color: #fff;
+    right: 0;
+    height: 24px;
+    line-height: 24px;
+    min-width: 50px;
+    font-size: 12px;
+    text-align: center;
+    background: #1CAAEC;
+    cursor: pointer;
+    display: inline-block;
+    border-radius: 3px;
+}
+
+.tprompt-btn-area .tprompt-sure-btn{
+	
+}
+
+.tprompt-btn-area .tprompt-cancel-btn{
+	background-color:#ccc;
+}
+.info>.checkbox-ul> li{
+	padding: 2px;
+	margin: 3px;
+}
+.info>.checkbox-ul> li:hover{
+	background-color: #f0f0f0;
+}
+
+
+
+
+
+
+
+
+

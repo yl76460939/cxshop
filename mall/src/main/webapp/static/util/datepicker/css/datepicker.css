@@ -1,0 +1,151 @@
+@charset "utf-8";
+/* CSS Document */
+a{ text-decoration:none; color:#444;}
+a:hover{color:#333; text-decoration:none;}
+.fl{ float:left; display:inline;}
+.fr{ float:right; display:inline;}
+.ml10{ margin-left:10px;}
+/*展开更多*/
+/*切换样式*/
+.fg_w07{ width:90px;}
+.chbh{max-height:231px;overflow-x:hidden;overflow-y:auto;}
+.overh{max-height:231px;overflow-x:hidden;overflow-y:auto;}
+.fgw80{width:76px;}
+.form-group01 .form-input{ position:relative;*z-index:90;}
+.form_select{ 
+    -webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	border-radius:3px; border:1px solid #d0d0d0; 
+	font-size:12px; 
+	-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075); 
+	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+	height:32px;
+	line-height:32px;
+	*height:30px;
+	*line-height:30px;
+	background-color:#fff;
+	cursor:pointer;
+	width:100%;
+	vertical-align:middle;
+	}
+/*日期*/
+.fdata_text{padding:0px 30px 0px 8px; display:block; height:28px;}
+.form_data{background: #fff url(../images/e1.png) 97% 6px no-repeat; overflow:hidden;}
+/* 按周 按月 按日 red */
+.s_tab li{ float:left; display:inline;border-radius:5px}
+.s_tab li a{ 
+	 display:block; padding:0px 8px;
+	 text-align:center; background-color:#f3f4f5; 
+	 border:1px solid #d6d6d6; height:30px; 
+	 line-height:30px; margin-right:-1px;
+}
+.s_tab li a.tab_on,.s_tab li a.tab_on:hover{ 
+	border-color: #3c8dbc;
+	_overflow: hidden;
+	cursor: pointer;
+	color: #fff !important;
+	background: #3c8dbc;
+	
+}
+
+/*时间窗样式*/
+.choose_week{width:490px;height:378px;background-color:#fff;position:absolute;top:33.5px;left:15px;;z-index:100;border-radius:3px;}
+.choose_week_left{width:60px;float:left;margin-left:-1px;position:relative;border-top:1px solid #ccc;}
+.choose_week_leftmain{width:60px;height:319px;overflow:hidden;}
+.arrow1,.choose_week_leftmain ul li{width:58px;height:28px;border-width:0 1px 1px 1px;border-color:#ccc;border-style:solid;text-align:center;line-height:28px;color:#666;cursor:pointer;background-color:#EDEDED;}
+.arrow1 .arrow_top1{display:inline-block;width:16px;height:16px;margin:0 auto;margin-top:5px;background:url(../images/icon_arrow.png) no-repeat 1px 4px;}
+.arrow1 .arrow_top1:hover{background-position:-33px 4px;}
+.choose_week_leftmain ul li.click{width:56px;height:28px;border-left:4px solid #5AA8E9;color:#333333;border-right:0;background-color:#FFFFFF;}
+.arrow1 .arrow_bottom{background-position:-100px 4px;}
+.arrow1 .arrow_bottom:hover{background-position:-66px 4px;}
+.choose_week_right{width:430px;height:376px;overflow:auto;border:1px solid #ccc;border-left:0px solid #ccc;float:left;margin-left:-1px;overflow-x:hidden;overflow-y:scroll;}
+.table_con{border-collapse:collapse;}
+.table_con td{border-bottom:1px dashed #ccc;;line-height:28px;padding:0 10px;text-align:left;vertical-align:top;}
+.table_con td a{color:#2176BD;margin-left:5px;cursor:pointer;padding:2px 4px;word-break:break-all;}
+.table_con td a.on,.table_con td a:hover{color:#2176BD;margin-left:5px;cursor:pointer;padding:1px 3px;background-color: #fafafa;border: 1px solid #ccc;border-radius:3px;}
+
+.choose_month{width:494px;height:300px;overflow-y:scroll;overflow-x:hidden;border:1px solid #ccc;left:15px;}
+.choose_season,.choose_year{width:405px;height:300px;overflow-y:scroll;overflow-x:hidden;border:1px solid #ccc;left:15px;}
+.choose_year{width:330px!important;}
+.choose_season .table_con td a,.choose_year .table_con td a{margin-left:20px;}
+
+
+.form-group01{ padding-left:10px; }
+.form-row02{ padding-bottom:10px; line-height:32px; *line-height:33px;}
+.fg_w09{ width:95%;}
+.fg_w14{ width:87%;}
+.fbh160{width:184px;}
+.mr10{ margin-right:10px;}
+.ml08{ margin-left:8px;}
+.form-group01 .form-input .form_sel_h{height:44px;line-height:44px;	*height:42px;*line-height:42px;}
+.form-group01 .form-input .form_sel_h em.icon_caret01{margin-top:6px;} 	
+.cont_explain a.but_more em.icon_caret02{background-position: -29px -282px;}
+.form-group01 .form-input div.f_select_on{
+	border:1px solid #3c8dbc;
+	outline: 0;
+	-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 5px rgba(102, 180, 233, 0.5);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 5px rgba(102, 180, 233, 0.5);
+}
+.form-group01 .form-input .form_select em{ width:15px; height:30px; background:url(../images/creis_icon01.png) left top no-repeat;}
+
+.form-group01 .form-input .form_select em.icon_caret01{ background-position:-200px -274px;}
+.form-group01 .form-input .form_option{ position:absolute; top:30px; left:0px; z-index:1111; background-color:#fff; border-style:solid; border-width:0px 1px 1px; border-color:#3c8dbc; width:100%; -webkit-box-sizing: border-box;
+-moz-box-sizing: border-box; box-sizing: border-box; border-radius:0px 0px 3px 3px; -webkit-box-shadow: 0px 4px 4px rgba(102, 180, 233, 0.2); box-shadow:  0px 4px 4px rgba(102, 180, 233, 0.2);}
+.form-group01 .form-input .form_option_b{border-color:#d0d0d0;}
+.form-group01 .form-input .form_select .sel_text{ line-height:30px; white-space: nowrap; overflow:hidden; padding-left:8px; }
+.form-group01 .form-input .form_check{ margin:0px 3px 0px 0px; height:13px; width:13px;}
+.form-group01 .form-input .form_option .f_optionbox{ display:block;}
+.form-group01 .form-input .form_option .f_optionbox:hover{ background-color:#ecf2f5;}
+.form-input .form_option a.f_optionbox,.table_tool .form-input .form_option a.f_optionbox,.cont_page .form-input .form_option a{ padding:0px 5px;}
+
+.butbox_bg{background-color:#f5f6f7; text-align: center; line-height:24px; padding:6px 5px;}
+.butbox a{ border-radius:3px; background-color:#aaa; color:#fff; padding:0px 12px; height:24px; line-height:24px; display:inline-block; }
+.butbox a:hover{ background-color:#999;}
+.butbox a.but_confirm{ background-color:#3c8dbc;}
+.sel_text .simple-label{
+	cursor:pointer;
+	margin-left:5px;
+	margin-bottom:0;
+	font-weight:normal;
+}
+
+.optionbox{ position:absolute; background-color:#fff;border-radius:3px; z-index:1111;border:1px solid  #1a4280;*width:600px; }
+
+.optionbox .icon_caret02{ position:absolute; height:10px; width:18px; background:url(../images/creis_icon01_blue.png) -357px -284px no-repeat; top:-10px; }
+
+.form-group01 .form-input .checkbox01 .form_check{ margin-right:5px;}
+
+.optionbox .option_tit{ background-color:#f5f6f7; padding:8px 10px; border-bottom:1px solid #ddd; border-radius:3px 3px 0px 0px;}
+
+.optionbox .opt_form01 dt,.optionbox .opt_form01 dd{ float:left; display:inline; }
+.optionbox .opt_form01 dd span{ display:inline-block; width:115px;margin:5px 0;}
+.optionbox .opt_form01 dd span .form_check{ margin:0px 5px 0px 0px;}
+
+.linebox{ border-bottom:1px solid #d6d6d6; height:15px; overflow:hidden; margin-bottom:10px;}
+.linebox01{ border-bottom:1px dotted #ccc; height:15px; overflow:hidden; margin-bottom:10px;}
+.p101515{ padding:10px 15px 15px 15px;}
+.fg_w15{ width:480px;}
+.blue01{ color:#196CD8!important;}
+.city-choose{
+    -webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	border-radius:1px;
+	border:1px solid #d0d0d0; 
+	font-size:12px; 
+	-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075); 
+	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+	height:30px;
+	line-height:30px;
+	*height:28px;
+	*line-height:28px;
+	background-color:#fff;
+	cursor:pointer;
+	width:100%;
+	vertical-align:middle;
+}
+.city-choose em{
+	 width:15px; height:28px; background:url(../images/creis_icon01.png) left top no-repeat;
+		background-position:-200px -274px;
+}

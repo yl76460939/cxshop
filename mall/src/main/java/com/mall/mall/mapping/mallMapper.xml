@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mall.mall.dao.MallDao">
+
+	<insert id="addSubMenu"  useGeneratedKeys="true" keyProperty="prs.menuId"
+	keyColumn="goodsTypeId">
+		INSERT INTO dc_shop_goodsType(
+		goodsTypeName,userId,shopId,parentId,isEnable,createDate)
+		VALUES (
+			#{prs.menuName,jdbcType=VARCHAR},
+			#{prs.userId},#{prs.shopId},
+			#{prs.parentId},1,NOW()
+		)
+	</insert>
+	
+	<select id="subRepeat" resultType="java.lang.Integer">
+		SELECT count(1) FROM dc_shop_goodsType a 
+		WHERE a.parentId = #{parentId}
+		AND a.goodsTypeName = #{menuName,jdbcType=VARCHAR}
+	</select>
+	
+	<insert id="addMainMenu"  useGeneratedKeys="true" keyProperty="prs.menuId"
+	keyColumn="goodsTypeId">
+		INSERT INTO dc_shop_goodsType(
+		goodsTypeName,userId,shopId,parentId,isEnable,createDate)
+		VALUES (
+			#{prs.menuName,jdbcType=VARCHAR},
+			#{prs.userId},#{prs.shopId},0,1,NOW()
+		)
+	</insert>
+	
+	<select id="mainRepeat" resultType="java.lang.Integer">
+		SELECT count(1) FROM dc_shop_goodsType a 
+		WHERE a.userId = #{userId}
+		AND a.goodsTypeName = #{menuName,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="queryMenuByUserId" resultMap="menuMap">
+		SELECT 
+		c.goodsTypeId parId,c.goodstypename parName,c.isEnable,
+		d.goodsTypeId subId,d.goodstypename subName,d.parentId ,
+		d.isEnable subIsEnable
+		FROM dc_user_info a
+		LEFT JOIN dc_user_shop b
+		ON a.userId = b.userId
+		LEFT JOIN dc_shop_goodsType c
+		ON b.shopId = c.shopId
+		AND c.isEnable = 1
+		AND c.parentId = 0
+		LEFT JOIN dc_shop_goodsType d
+		ON d.parentId = c.goodsTypeId
+		WHERE a.userId = #{id}
+		ORDER BY c.createDate,d.createDate
+	</select>
+	
+	<select id="queryGoodsByTypeAndShop" resultType="Map">
+		SELECT 
+		userId,shopId,goodsTypeCode,goodsTypeId,goodsTypeName,
+		goodsId,goodsName,price,unit,photos,createDate,status,remark
+		 FROM dc_shop_goodsList a
+		WHERE a.goodsTypeId = #{menuId}
+		AND shopId = #{shopId}
+	</select>
+	
+	<select id="queryUserInfo" resultMap="userMap">
+		SELECT 
+		a.userId,a.userName,a.userMobilePhone,a.userTelephone,
+		a.userPwd,a.userType,a.userAddress,
+		b.shopId,b.shopKey,b.shopName,b.mainAreas,b.logo,b.photos
+		FROM dc_user_info a
+		LEFT JOIN dc_user_shop b
+		ON a.userId = b.userId
+		WHERE a.userId = #{id}
+	</select>
+	
+	<resultMap id="userMap"
+		type="com.mall.sso.bean.User">
+		<result column="userId" property="userId" jdbcType="INTEGER" />
+		<result column="userName" property="userName" jdbcType="VARCHAR" />
+		<result column="userMobilePhone" property="userMobilePhone" jdbcType="VARCHAR" />
+		<result column="userTelephone" property="userTelephone" jdbcType="VARCHAR" />
+		<result column="userPwd" property="userPwd" jdbcType="VARCHAR" />
+		<result column="userType" property="userType" jdbcType="INTEGER" />
+		<result column="userAddress" property="userAddress" jdbcType="VARCHAR" />
+		<result column="shopId" property="shopId" jdbcType="INTEGER" />
+		<result column="shopKey" property="shopKey" jdbcType="VARCHAR" />
+		<result column="shopName" property="shopName" jdbcType="VARCHAR" />
+		<result column="mainAreas" property="mainAreas" jdbcType="VARCHAR" />
+		<result column="logo" property="logo" jdbcType="VARCHAR" />
+		<result column="photos" property="photos" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<resultMap type="com.mall.mall.bean.MainMenu" id="menuMap">  
+        <id column="parId" property="mainMenuId"/>  
+        <result column="parName" property="mainMenuName"/>
+        <result column="isEnable" property="mainIsEnable"/>  
+        <collection property="subMenuList" column="parentId" ofType="com.mall.mall.bean.SubMenu">  
+            <id column="subId" property="subMenuId"/>  
+	        <result column="subName" property="subMenuName"/>
+	        <result column="subIsEnable" property="subIsEnable"/>
+        </collection>  
+    </resultMap>
+    
+    
+</mapper>

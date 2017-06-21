@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mall.wholesaler.dao.WholesalerDao">
+
+      
+      <resultMap type="com.mall.wholesaler.pojo.User" id="user">  
+        <id column="userId" property="userId" javaType="java.lang.Integer"/>  
+        <result column="userName" property="userName" javaType="java.lang.String"/> 
+        <result column="userMobilePhone" property="userMobilePhone" javaType="java.lang.String"/> 
+        <result column="userTelephone" property="userTelephone" javaType="java.lang.String"/> 
+        <result column="userPwd" property="userPwd" javaType="java.lang.String"/> 
+        <result column="userType" property="userType" javaType="java.lang.Integer"/> 
+        <result column="userAddress" property="userAddress" javaType="java.sql.Date"/>
+        <result column="lastLoginDate" property="lastLoginDate" javaType="java.sql.Date"/> 
+        <result column="createDate" property="createDate" javaType="java.lang.String"/> 
+    </resultMap>
+       
+ <insert id="CreateWlUser"   parameterType="com.mall.wholesaler.pojo.User" useGeneratedKeys="true"  keyProperty="user.userId">
+    INSERT INTO dc_user_info(userName
+                            ,userMobilePhone
+                            ,userTelephone
+                            ,userPwd
+                            ,userType
+                            ,userAddress
+                            ,lastLoginDate
+                            ,createDate)
+     VALUES( #{user.userName}
+           ,#{user.userMobilePhone}
+           ,#{user.userTelephone}
+           ,#{user.userPwd}
+           ,#{user.userType}
+           ,#{user.userAddress}
+           ,SYSDATE()
+           ,SYSDATE()
+           );
+ </insert>
+
+ <insert id="CreateShop">
+   INSERT INTO dc_user_shop
+   (shopKey
+	,shopName
+	,userId
+	,userName
+	,userTelephone
+	,userAddress
+	,mainAreas
+	,logo
+	,photos
+	)VALUES
+	(
+	  #{shop.shopKey}
+	 ,#{shop.shopName}
+	 ,#{shop.userId}
+	 ,#{shop.userName}
+	 ,#{shop.userTelephone}
+	 ,#{shop.userAddress}
+	 ,#{shop.mainAreas}
+	 ,#{shop.logo}
+	 ,#{shop.photos}
+	)
+ </insert>
+
+ <update id="updateShop">
+
+ </update>            
+
+      
+
+</mapper>

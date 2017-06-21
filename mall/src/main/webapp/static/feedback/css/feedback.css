@@ -1,0 +1,103 @@
+@CHARSET "UTF-8";
+
+.ellipsis-col{
+	width:260px !important;
+	overflow:hidden;
+	text-overflow:ellipsis;
+	white-space:nowrap;
+}
+body{
+	font-size:14px;
+}
+.laydate_box, .laydate_box *,.laydate-icon {
+        box-sizing:content-box;
+}
+.laydate-icon{
+	background:url('../../util/laydate/skins/molv/icon.png');
+	height: 24px;
+    line-height: 24px;
+    padding-right: 20px;
+    border: 1px solid #d2d6de;
+    background-repeat: no-repeat;
+    background-position: right center;
+    background-color: #fff;
+    outline: 0;
+    padding-left:10px;
+    cursor:pointer;
+}
+
+.from-to{
+	margin:0 5px;
+}
+
+.transition {
+    -webkit-transition: all .2s ease-out;
+    -moz-transition: all .2s ease-out;
+    -ms-transition: all .2s ease-out;
+    -o-transition: all .2s ease-out;
+    transition: all .2s ease-out;
+}
+
+.detail-item{
+    color: #333;
+    text-decoration: underline;
+}
+
+.detail-item:hover {
+    color: #3ca5f6;
+}
+
+.no-left{
+	padding-left:0;
+}
+
+.no-right{
+	padding-right:0;
+}
+
+.commit-btn{
+	font-size:16px;
+    width: 150px;
+    padding: 5px 10px;
+    background-color: #1CAAEC;
+    border: 2px solid #1CAAEC;
+    border-radius: 2px !important;
+    color:#fff;
+}
+
+.search-btn{
+	font-size:16px;
+    width: 150px;
+    margin-bottom: 5px;
+    padding: 5px 10px;
+    background-color: #1CAf9a;
+    border: 1px solid #1CAf9a;
+    border-radius: 2px !important;
+    color:#fff;
+    outline: 0;
+}
+
+.show-item-area .prompt i{
+	background: url('../../main/images/login-logic-icons.png') no-repeat -74px 0;
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    vertical-align: middle;
+    margin: -3px 5px 0 3px;
+}
+
+.show-item-area .prompt i.warning{
+	background-position: -37px 0;
+}
+
+.show-item-area .prompt i.error{
+	background-position: 0 0;
+}
+
+.show-item-area .loading{
+	width:20px;
+	height:20px;
+	background: url('../../main/images/loading-20.gif') no-repeat center center !important;
+}
+
+

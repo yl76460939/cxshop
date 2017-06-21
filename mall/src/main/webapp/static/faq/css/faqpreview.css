@@ -1,0 +1,45 @@
+@CHARSET "UTF-8";
+body,.accordion-toggle{
+	font-family: 'Microsoft yahei', 微软雅黑, Arial;
+}
+.page-content{
+	background-color:#fff;
+}
+.panel-title{
+	font-size:14px;
+}
+.callout {
+    border-radius: 3px !important;
+    font-size: 16px;
+}
+.type-toggle{
+	font-size:16px !important;
+}
+.callout {
+    border-radius: 3px !important;
+}
+.is-Num{
+	font-family: georgia;
+	font-size:16px;
+}
+.panel,.panel-heading{
+	border-radius:0!important;
+}
+.tab-content a {
+    color: #444;
+}
+
+.isPublish{
+	background-color: #999;
+	color:#fff !important;
+	font-size:12px;
+	border-radius:4px !important;
+	padding:3px 5px;
+}
+
+.isPublish.red{
+	background-color: #dd4b39 !important;
+}
+.panel-body{
+	overflow-x:hidden;
+}

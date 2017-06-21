@@ -1,0 +1,598 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mall.auth.dao.AuthDao">
+	<resultMap id="provResult" type="com.mall.auth.bean.Province">
+		<result column="provId" property="provId" jdbcType="VARCHAR" />
+		<result column="provName" property="prov" jdbcType="VARCHAR" />
+		<result column="cityName" property="city" jdbcType="VARCHAR" />
+		<result column="cityId" property="cityId" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<select id="queryAllKey" resultType="Map">
+		select code,name,
+		case divisive 
+		when 1 then '是' 
+		else '否' end divisive,
+		isnull(remark,'') remark 
+		From Config..dc_pri_operationkey 
+		order by id desc
+	</select>
+	
+	<!-- 切勿去掉括号或将左括号放入 open 中 以免传参为空 将数据全删除了  -->
+	<delete id="delByRoleIds">
+		delete from Config..dc_pri_config 
+		where (
+		<foreach collection="roleIds" item="item" close=")" separator="or" >
+             roleId = #{item,jdbcType=VARCHAR}
+        </foreach>
+	</delete>
+	
+	<select id="selectConfigByRoleId" resultType="Map">
+		select roleId, usable, divisive, type, cityPinyin, cityNo, 
+			cityName, operationKey, number, 
+		convert(varchar(10),expires,120) expires
+		From Config..dc_pri_config 
+		where roleId = #{roleId,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="ready" resultType="Map">
+	    select distinct a.cityId,a.cityName,b.cityNum pinyin ,
+		isnull(convert(varchar(10),c.expires,120),'') expires,
+		case when expires >= 
+		convert(varchar(10),GETDATE(),120)
+		or expires is null 
+		then 'green'
+		else 'red' end class,
+		 a.orderBy
+		from Config..dc_public_activeCity a
+		inner join Config..dc_dim_city b
+		on a.cityId = b.areaNum
+		inner join Config..dc_pri_config c
+		on a.cityId = c.cityNo
+		and c.roleId = #{roleId,jdbcType=VARCHAR}
+		order by orderBy
+	</select>
+	
+	<insert id="save2" >
+		insert into Config..dc_pri_config 
+		( roleId, usable, divisive, type, cityPinyin, cityNo, 
+		cityName, operationKey, number, expires)
+		<foreach collection="prs" item="item" separator=" union all " >
+		select '${item.roleId}'
+		,'${item.usable}'
+		,'${item.divisive}'
+		,'${item.type}'
+		,'${item.cityPinyin}'
+		,'${item.cityNo}'
+		,'${item.cityName}'
+		,'${item.operationKey}'
+		,'${item.number}'
+		,'${item.expires}'</foreach>  
+	</insert>
+	
+	<select id="selectConfigByRoleIdAndCityId" resultType="Map">
+		select roleId, usable, divisive, type, cityPinyin, 
+		cityNo, cityName, operationKey, number, 
+		convert(varchar(10),expires,120) expires
+		from Config..dc_pri_config
+		where divisive = 1
+		and roleId = #{roleId,jdbcType=VARCHAR}
+		and cityNo = #{cityId,jdbcType=VARCHAR}
+	</select>
+	
+	<delete id="delByCitys">
+		delete from Config..dc_pri_config 
+		where divisive = 1 
+		and roleId = #{roleId,jdbcType=VARCHAR}
+		and
+		<foreach collection="idInfos" item="item" open=" (" close=")" separator="or" >
+             cityNo = #{item.cityId,jdbcType=VARCHAR}
+        </foreach>
+	</delete>
+	
+	<delete id="delByNormal">
+		delete from Config..dc_pri_config 
+		where  divisive = 0 
+		and roleId = #{roleId,jdbcType=VARCHAR}
+	</delete>
+	
+	<delete id="delByCity">
+		delete from Config..dc_pri_config 
+		where divisive = 1 
+		and roleId = #{roleId,jdbcType=VARCHAR}
+		and cityNo = #{cityNo,jdbcType=VARCHAR}
+	</delete>
+	
+	<insert id="save" >
+		insert into Config..dc_pri_config 
+		( roleId, usable, divisive, type, cityPinyin, cityNo, 
+		cityName, operationKey, number, expires)
+		<foreach collection="prs" item="item" separator=" union all " >
+		select '${item.roleId}'
+		,'${item.usable}'
+		,'${item.divisive}'
+		,'${item.type}'
+		,'${item.cityPinyin}'
+		,'${item.cityNo}'
+		,'${item.cityName}'
+		,'${item.operationKey}'
+		,'${item.number}'
+		,'${item.expires}'</foreach>  
+	</insert>
+	
+	<select id="queryNormalFunctionInfo" resultType="Map">
+		select a.code,a.name,a.remark,b.* 
+		From Config..dc_pri_operationkey a
+		left join 
+		Config..dc_pri_config b
+		on a.code = b.operationKey
+		and b.roleId = #{roleId,jdbcType=VARCHAR}
+		where a.divisive =0
+	</select>
+	
+	<select id="queryCityFunctionInfo" resultType="Map">
+		select a.code,a.name,a.remark,b.* 
+		from Config..dc_pri_operationkey a
+		left join Config..dc_pri_config b
+		on a.code = b.operationKey
+		and roleId = #{roleId,jdbcType=VARCHAR}
+		and cityNo = #{cityId,jdbcType=VARCHAR}
+		where a.divisive =1
+		order by a.id desc
+	</select>
+	
+	<select id="selectActiveCityInfo" resultType="Map">
+	    select a.cityId,a.cityName,
+	    b.cityNum pinyin,
+		isnull(convert(varchar(10),c.expires,120),'') expires,
+		case when expires >= 
+		convert(varchar(10),GETDATE(),120)
+		or expires is null 
+		then 'green'
+		else 'red' end class
+		from Config..dc_public_activeCity a
+		inner join Config..dc_dim_city b
+		on a.cityId = b.areaNum
+		left join Config..dc_pri_config c
+		on a.cityId = c.cityNo
+		and roleId = #{roleId,jdbcType=VARCHAR}
+		where cityId != 100000
+		order by orderBy
+	</select>
+	
+	<select id="queryNormalFunction" resultType="Map">
+		select code,name from Config..dc_pri_operationkey
+		where divisive = 0 order by id desc
+	</select>
+	
+	<select id="selectUserPrivilege" resultType="Map">
+		select cityName,b.menuName,downloadsNumber,
+		convert(varchar(10), dueTime, 120) dueTime 
+		from Config..dc_user_authority a
+		left join Config..dc_pri_menulist b
+		on a.menuId = b.menuId
+		where userId = #{userId, jdbcType=VARCHAR}
+		order by a.cityName ,downloadsNumber,dueTime desc
+	</select>
+	
+	<insert id="iUsers">
+			insert into Config..dc_userinfo(user_id, user_name, first_login_time, 
+			last_login_time,
+			row_state, login_status, password,user_type, phone_num,nickname
+			)
+			<foreach collection="param" item="item" separator=" union all " >
+			select '${item.phoneNo}',
+			'${item.phoneNo}',GETDATE(),GETDATE(),
+			1,1,'1bbd886460827015e5d605ed44252251',
+			1,'${item.phoneNo}',
+			'${item.workNo}'
+			</foreach>
+	</insert>
+	
+	<insert id="iPrivilege">
+			insert into  Config..dc_pri_privilege(roleId, userId, createTime,rowState)
+			<foreach collection="param" item="item" separator=" union all " >
+			select 'normal','${item.phoneNo}',GETDATE(),1
+			</foreach>
+	</insert>
+	
+	<insert id="uUsers">
+		<foreach collection="param" item="item" separator=";">  
+                update Config..dc_userinfo   
+                <set>  
+                  nickname='${item.workNo}'
+                </set>  
+                where user_id = '${item.phoneNo}'  
+         </foreach>  
+	</insert>
+	
+	<select id="check" resultType="Map">
+		select * From Config..DC_USERINFO 
+ 		<where>
+ 		    1 = 2 
+ 			<foreach collection="param" item="item" open=" or (" close=")" separator="or" >
+             USER_ID = #{item.phoneNo,jdbcType=VARCHAR}
+              or 
+             NICKNAME = #{item.workNo,jdbcType=VARCHAR}
+        	</foreach>
+ 		</where>
+		
+	</select>
+	
+	<select id="selectAstrictUsers" resultType="Map">
+		select USER_ID,NICKNAME,PHONE_NUM,
+		CONVERT(varchar(16),ASTRICT_TIME ,120) ASTRICT_TIME
+		from Config..DC_USERINFO where ASTRICT_STATUS = 1
+		order by ASTRICT_TIME desc
+	</select>
+	
+	<update id="astrict">
+		update Config..DC_USERINFO set ASTRICT_STATUS = 2 
+		where USER_ID= #{userId ,jdbcType=VARCHAR}	
+	</update>
+	
+	<select id="selectMonitorSub" resultType="Map">
+		select USER_ID userId,isnull(NICKNAME,'--') nickname,
+		isnull(PHONE_NUM,'--') phoneNum,MODULE_ID,MODULE_NAME,
+		amount,down,rownum From (
+			select a.*, isnull(b.downloadCounts,0) down ,
+			ROW_NUMBER()over(order by amount desc) rownum From (
+				select opera.MODULE_ID,opera.MODULE_NAME,opera.USER_ID,
+				uinfo.NICKNAME,uinfo.PHONE_NUM, COUNT(1) amount, pri.roleId
+				From Config..DC_SYSLOG_OPERATIONLOG opera 
+				left join Config..DC_USERINFO uinfo
+				on opera.USER_ID = uinfo.USER_ID
+				left join Config..dc_pri_privilege pri
+				on uinfo.USER_ID = pri.userId
+				where convert(char(10),opera.CREATE_TIME,120) >= #{param.startDate,jdbcType=VARCHAR}
+				and convert(char(10),opera.CREATE_TIME,120) <![CDATA[ <= ]]> #{param.endDate,jdbcType=VARCHAR}
+				and pri.roleId is not null
+				<if test="param.status == 'visitor'" >
+					and pri.roleId = 'visitor'
+				</if>
+				<if test="param.status == 'other'" >
+					and pri.roleId != 'visitor'
+				</if>
+				and opera.USER_ID = #{param.userId ,jdbcType=VARCHAR}
+				group by opera.USER_ID,uinfo.NICKNAME,uinfo.PHONE_NUM, 
+				pri.roleId,opera.MODULE_ID,opera.MODULE_NAME
+			) a
+			left join (
+				select down.userId,SUM(curResultsNum) downloadCounts,
+				menu.menuId,menu.menuName
+				From Config..dc_download_record down 
+				left join Config..dc_pri_menulist menu
+				on down.menuId = menu.menuId
+				where convert(char(10),down.downloadTime,120) >= #{param.startDate,jdbcType=VARCHAR}
+				and convert(char(10),down.downloadTime,120) <![CDATA[ <= ]]> #{param.endDate,jdbcType=VARCHAR}
+				and down.userId = #{param.userId ,jdbcType=VARCHAR}	
+				group by down.userId,menu.menuId,menu.menuName
+			) b
+			on a.USER_ID = b.userId 
+			and a.MODULE_ID = b.menuId
+			and a.MODULE_NAME = b.menuName
+		) t
+		order by amount desc
+	</select>
+	
+	<select id="selectMonitorCount" resultType="java.lang.Integer">
+		select count(t.amount) From (
+			select a.*, isnull(b.downloadCounts,0) down From (
+				select opera.USER_ID,uinfo.NICKNAME,uinfo.PHONE_NUM, COUNT(1) amount 
+				From Config..DC_SYSLOG_OPERATIONLOG opera 
+				left join Config..DC_USERINFO uinfo
+				on opera.USER_ID = uinfo.USER_ID
+				left join Config..dc_pri_privilege pri
+				on uinfo.USER_ID = pri.userId
+				where convert(char(10),opera.CREATE_TIME,120) >= #{param.startDate,jdbcType=VARCHAR}
+				and convert(char(10),opera.CREATE_TIME,120)<![CDATA[ <= ]]> #{param.endDate,jdbcType=VARCHAR}
+				<if test="param.status == 'visitor'" >
+					and pri.roleId = 'visitor'
+				</if>
+				<if test="param.status == 'other'" >
+					and pri.roleId != 'visitor'
+				</if>
+				group by opera.USER_ID,uinfo.NICKNAME,uinfo.PHONE_NUM
+			) a
+			left join (
+				select down.userId,SUM(curResultsNum) downloadCounts From Config..dc_download_record down
+				where convert(char(10),down.downloadTime,120) >= #{param.startDate,jdbcType=VARCHAR}
+				and convert(char(10),down.downloadTime,120)<![CDATA[ <= ]]> #{param.endDate,jdbcType=VARCHAR}
+				group by down.userId
+			) b
+			on a.USER_ID = b.userId
+		) t
+	</select>
+	
+	<select id="selectMonitorInfo" resultType="Map">
+		select USER_ID userId,isnull(NICKNAME,'--') nickname,
+		isnull(PHONE_NUM,'--') phoneNum,roleId,
+		amount,down,rownum From (
+			select a.*, isnull(b.downloadCounts,0) down ,
+			ROW_NUMBER()over(order by amount desc) rownum From (
+				select opera.USER_ID,uinfo.NICKNAME,uinfo.PHONE_NUM, COUNT(1) amount, pri.roleId
+				From Config..DC_SYSLOG_OPERATIONLOG opera 
+				left join Config..DC_USERINFO uinfo
+				on opera.USER_ID = uinfo.USER_ID
+				left join Config..dc_pri_privilege pri
+				on uinfo.USER_ID = pri.userId
+				where convert(char(10),opera.CREATE_TIME,120) >= #{param.startDate,jdbcType=VARCHAR}
+				and convert(char(10),opera.CREATE_TIME,120)  <![CDATA[<=]]>   #{param.endDate,jdbcType=VARCHAR}
+				and pri.roleId is not null
+				<if test="param.status == 'visitor'" >
+					and pri.roleId = 'visitor'
+				</if>
+				<if test="param.status == 'other'" >
+					and pri.roleId != 'visitor'
+				</if>
+				
+				group by opera.USER_ID,uinfo.NICKNAME,uinfo.PHONE_NUM, pri.roleId
+			) a
+			left join (
+				select down.userId,SUM(curResultsNum) downloadCounts From Config..dc_download_record down
+				where convert(char(10),down.downloadTime,120) >= #{param.startDate,jdbcType=VARCHAR}
+				and convert(char(10),down.downloadTime,120) <![CDATA[<=]]>  #{param.endDate,jdbcType=VARCHAR}
+				group by down.userId
+			) b
+			on a.USER_ID = b.userId
+		) t
+		<include refid="basicPaging"></include>
+	</select>
+	
+	<sql id="basicPaging">
+	 		<![CDATA[ where  ROWNUM <= #{param.length} ]]>
+	 		<if test="param.start != 0" >
+      				and ROWNUM > #{param.start}	
+   			</if>
+	</sql>
+	
+	<select id="selectRegUserInfo" resultType="Map">
+		select user_id, user_name, phone_num, nickname 
+		from Config..DC_USERINFO 
+		where USER_TYPE = 1 
+		order by FIRST_LOGIN_TIME desc
+	</select>
+	
+	<select id="selectActiveCity" resultType="Map">
+		select city.areaName,city.areaNum,
+		city.cityNum,active.cityType
+		from Config..dc_public_activeCity active
+		inner join Config..dc_dim_city city
+		on active.cityId = city.areaNum
+		order by active.orderBy
+	</select>
+	
+	<delete id="deleteDownloadAuthority">
+		delete from Config..dc_download_authority
+		where roleID = #{roleId,jdbcType=VARCHAR}
+		<foreach collection="menulistIds" item="menuId" open=" and (" close=")" separator="or" >
+             menuId = #{menuId,jdbcType=VARCHAR}
+        </foreach>
+	</delete>
+	
+	<delete id="deleteUserAuth">
+		delete from Config..dc_user_authority
+		where 
+		<foreach collection="userIds" item="userId" open="  (" close=")" separator="or" >
+             userId = #{userId,jdbcType=VARCHAR}
+        </foreach>
+        <foreach collection="cityInfos" item="item" open=" and (" close=")" separator="or" >
+             cityNO = #{item.cityId,jdbcType=VARCHAR}
+        </foreach>
+	</delete>
+	
+	<insert id="insertDownloadAuthority" >
+		insert into Config..dc_download_authority (roleid,menuid,cityid,downloadcounts) 
+		<foreach collection="dlInfo" item="item" separator=" union all " >
+		select '${item.roleId}','${item.menuId}','${item.cityId}','${item.downloadCounts}'</foreach>  
+	</insert>
+	
+	<insert id="generateKey" >
+		insert into [Config].[dbo].[dc_pri_operationkey] 
+		(code,name,remark,divisive) 
+		values(#{key,jdbcType=VARCHAR},
+		#{name,jdbcType=VARCHAR},
+		#{remark,jdbcType=VARCHAR},
+		#{divisive,jdbcType=VARCHAR})  
+	</insert>
+	
+	<insert id="addRole"  useGeneratedKeys="true" keyProperty="prs.id"
+	keyColumn="id">
+		insert into [Config].[dbo].[dc_pri_role] 
+		(roleName,roleId,remark,rowstate) 
+		values(#{prs.name,jdbcType=VARCHAR},
+		#{prs.roleId,jdbcType=VARCHAR},
+		#{prs.remark,jdbcType=VARCHAR},1)  
+	</insert>
+	
+	<update id="updateUserRole">
+		update Config..dc_pri_privilege 
+        <set>  
+          roleId= #{prs.roleId,jdbcType=VARCHAR}
+        </set>  
+        where userid = #{prs.userId,jdbcType=VARCHAR}
+	</update>
+	
+	<insert id="insertUserRole">
+		insert into Config..dc_pri_privilege
+		(roleId,userId,createTime,rowState)
+		values(#{prs.roleId,jdbcType=VARCHAR},
+			#{prs.userId,jdbcType=VARCHAR},GETDATE(),1)
+	</insert>
+	
+	<select id="selectRoleByName" resultType="java.lang.Integer">
+		select count(1) from [Config].[dbo].[dc_pri_role] 
+		where roleName = #{roleName,jdbcType=VARCHAR}
+	</select>
+	
+	<insert id="insertUserAuth" >
+		insert into [Config].[dbo].[dc_user_authority]
+		([userId]
+	      ,[cityPinyin]
+	      ,[cityNO]
+	      ,[cityName]
+	      ,[moduleId]
+	      ,[menuId]
+	      ,[downloadsNumber]
+	      ,[dueTime]
+	      ,[isEnable]) 
+		<foreach collection="info" item="item" separator=" union all " >
+		select '${item.userId}'
+		,'${item.cityPy}'
+		,'${item.cityId}'
+		,'${item.cityName}'
+		,'${item.bigClassName}'
+		,'${item.menuId}'
+		,'${item.downloadCounts}'
+		,'${item.dueTime}'
+		,'1'</foreach>  
+	</insert>
+
+	<select id="selectMenuDetails" resultType="Map">
+		select menuId moduleId,menuName moduleName,
+		moduleId bigClassName
+		from Config..dc_pri_menulist  
+		order by id
+	</select>
+	
+	<!-- 查询菜单详细信息 -->
+	<select id="selectMenuDetails_bak" resultType="Map">
+		select menuId moduleId,menuName moduleName,
+		moduleId bigClassName
+		from Config..dc_pri_menulist 
+		where rowstate >-1 order by id
+	</select>
+	
+	<!-- 不区分用户是否已经注销 -->
+	<select id="selectAllUserAndRole" resultType="java.util.HashMap">
+			select a.user_id,
+		       user_name,
+		       convert(varchar(10),first_login_time,120)
+		        registTime,
+		       phone_num,
+		       nickname,
+		       c.rolename,
+		       c.roleid
+		  From Config .. DC_USERINFO a
+		  left join Config .. dc_pri_privilege b
+		    on a.USER_ID = b.userId
+		  left join Config .. dc_pri_role c
+		    on b.roleId = c.roleId
+		 where a.USER_TYPE = 1
+		 order by FIRST_LOGIN_TIME desc
+	</select>
+	
+	<select id="selectReportDataByRegs" resultType="Map">
+				select
+		/* 总注册人数 */
+		 register = (select isnull(COUNT(1), 0) c
+		               From Config .. DC_USERINFO
+		              where USER_TYPE = 1),
+		 /* 当天活跃人数 */
+		 active = (1),
+		 /* 总下载条数  */
+		 downloadCounts =
+		 ( 1),
+		 /* 下载最高(条/天) */
+		 downloadMax = (1)
+				
+	</select>
+	
+	<select id="selectReportData" resultType="Map">
+				select
+		/* 总注册人数 */
+		 register = (select isnull(COUNT(1), 0) c
+		               From Config .. DC_USERINFO
+		              where USER_TYPE = 1),
+		 /* 当天活跃人数 */
+		 active = ( select isnull(count(t.USER_NAME),0) c from (
+		              select a.USER_NAME
+		             from Config .. DC_SYSLOG_OPERATIONLOG a
+		            inner join Config .. DC_USERINFO b
+		               on a.USER_ID = b.USER_ID
+		            where LOG_TYPE = '登录'
+		              and convert(char(10), CREATE_TIME, 120) >=
+		                  convert(char(10), getdate(), 120)
+		               group by a.USER_NAME
+		               ) t),
+		 /* 总下载条数  */
+		 downloadCounts =
+		 (select isnull(sum(curResultsNum), 0) s From Config .. dc_download_record),
+		 /* 下载最高(条/天) */
+		 downloadMax = (select MAX(s)
+		                  from (select isnull(sum(curResultsNum), 0) s, downloadTime
+		                          From Config .. dc_download_record
+		                         group by downloadTime) t)
+				
+	</select>
+	
+	<!-- 查询权限设置详细信息 -->
+	<select id="selectRoleSettingInfo" resultType="Map">
+			select role.roleName,
+				   role.remark,
+			       menu.menuName,
+			       LEFT(main.city, LEN(main.city) - 1) as city,
+			       LEFT(main.counts, LEN(main.counts) - 1) as counts
+			  From (select a.roleId,
+			               a.menuId,
+			               city = (select cityId + ','
+			                         from Config..dc_download_authority x
+			                        where x.roleId = a.roleId
+			                          and x.menuId = a.menuId
+			                          FOR XML PATH('')),
+			               counts = (select convert(varchar, downloadCounts) + ','
+			                           from Config..dc_download_authority x
+			                          where x.roleId = a.roleId
+			                            and x.menuId = a.menuId
+			                            FOR XML PATH(''))
+			          From Config..dc_download_authority a
+			          left join Config..dc_pri_role b
+			            on a.roleId = b.roleId
+			          left join Config..dc_pri_menulist c
+			            on a.menuId = c.menuId
+			          left join Config..dc_districts d
+			            on a.cityId = d.codename
+			         where b.rowState > -1
+			           and c.rowState > -1
+			         group by a.roleId, a.menuId) main
+			  left join Config..dc_pri_role role
+			    on main.roleId = role.roleId
+			  left join Config..dc_pri_menulist menu
+			    on menu.menuId = main.menuId
+			 where role.rowState > -1
+			   and menu.rowState > -1
+			 order by roleName, menuName
+	</select>
+	
+	
+	
+	
+	<!-- 查询权限详细信息 -->
+	<select id="selectRoleDetails" resultType="Map">
+		select roleId,roleName,remark,rowstate 
+		from Config..dc_pri_role
+		where rowstate > -1 
+		order by id desc
+	</select>
+	
+	
+	
+	<!-- 查询省市区详细信息 -->
+	<select id="selectProvDetails" 
+		resultMap="provResult">
+		<![CDATA[
+			select a.code provId,a.codename provName,
+			case when b.codename = '市辖区' then a.codename 
+			else b.codename end cityId,
+			case when b.codename = '市辖区' then a.codename 
+			else b.codename end cityName
+			From Config..dc_districts a 
+			inner join Config..dc_districts b
+			on a.code = b.parentCode
+			where a.level = 1 and b.level = 2
+			and b.codename <> '县'
+			order by a.ID
+		]]>
+	</select>
+	
+</mapper>

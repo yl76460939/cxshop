@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mall.syslog.dao.LogWriterDao">
+
+	<!-- 插入数据库操作日志 -->
+	<insert id="insertDbOperLog">
+		<![CDATA[
+			insert into Config..dc_syslog_operationlog( 
+			user_id, create_time, log_type, description, sql, 
+			ip_address, module_id, module_name, user_name ,operate_status
+			) values(
+		 ]]>
+			#{param1.userId,jdbcType=VARCHAR},
+			#{param1.createTime,jdbcType=VARCHAR},
+			#{param1.logType,jdbcType=VARCHAR},
+			#{param1.description,jdbcType=VARCHAR},
+			#{param1.sql,jdbcType=VARCHAR},
+			#{param1.ipAddress,jdbcType=VARCHAR},
+			#{param1.moduleId,jdbcType=VARCHAR},
+			#{param1.moduleName,jdbcType=VARCHAR},
+			#{param1.userName,jdbcType=VARCHAR},
+			#{param1.operateStatus,jdbcType=VARCHAR}
+		<![CDATA[)]]>
+
+	</insert>
+	
+</mapper>

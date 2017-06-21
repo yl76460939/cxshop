@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mall.feedback.dao.FeedbackDao">
+
+	<select id="selectVersionHistory" resultType="java.util.HashMap">
+		 select * From (
+		  select ROW_NUMBER()over(order by time desc)
+				ROWNUM,
+		       [id]
+		      ,[title]
+		      ,convert(varchar(10),[time],120) [time]
+		      ,[briefContents]
+		      ,[detailContents]
+		      ,[versionNum]
+		      ,[remark]
+		      ,[triggered]
+		      ,[isPublish]
+		  FROM [Config].[dbo].[dc_sys_versionUpdateRecord]
+		  ) t
+		<include refid="basicPaging" />
+	</select>
+	
+	<select id="selectVersionHistoryCount" resultType="java.lang.Integer">
+		  select count(1)
+		  FROM [Config].[dbo].[dc_sys_versionUpdateRecord]
+	</select>
+	
+	<select id="selectFaqInfoByFid" resultType="java.util.HashMap">
+		SELECT  [id]
+	      ,[fid]
+	      ,[title]
+	      ,[colorClass]
+	      ,[itemOrderby]
+	      ,[lastModifyTime]
+	      ,[content]
+	      ,[isOpen]
+	      ,isPublish
+	  FROM [Config].[dbo].[dc_server_faqcontent]
+	  where fid = #{fid}
+	  and rowstate >-1
+	  order by itemOrderby
+	</select>
+	
+	<select id="selectFaqType" resultType="java.util.HashMap">
+		select * From [Config]..dc_server_faqtype order by id
+	</select>
+
+	<select id="selectFaqById" resultType="java.util.HashMap">
+		select b.id, a.title, a.iconClass,
+		a.isDefault,a.rowState,
+		b.fid, b.title subtitle, b.colorClass,
+		b.itemOrderby, b.isOpen, b.isPublish,
+		convert(varchar(11),b.lastModifyTime,120) lastModifyTime,
+		b.[content]
+		from
+		[Config]..dc_server_faqtype a
+		left join [Config]..dc_server_faqcontent
+		b
+		on a.id = b.fid
+		where b.id = #{id}
+	</select>
+	
+	<select id="selectVersionById" resultType="java.util.HashMap">
+		SELECT [id]
+	      ,[title]
+	      ,convert(varchar(10),time,120) time
+	      ,[briefContents]
+	      ,[detailContents]
+	      ,[versionNum]
+	      ,[remark]
+	      ,[triggered]
+	      ,[isPublish]
+  		FROM [Config].[dbo].[dc_sys_versionUpdateRecord]
+		where id = #{id}
+	</select>
+	
+	<insert id="insertFaqContent" useGeneratedKeys="true" keyProperty="map.id">
+		insert into [Config]..dc_server_faqcontent (
+		fid, title, colorClass, itemOrderby, lastModifyTime, isOpen, b.isPublish,
+		[content]
+		)values(
+		#{map.fid},
+		#{map.title,jdbcType=VARCHAR},
+		#{map.colorClass,jdbcType=VARCHAR},
+		(select MAX(itemOrderby)+1 from [Config].[dbo].[dc_server_faqcontent] 
+		where fid = #{map.fid}),
+		getdate(),
+		#{map.isOpen,jdbcType=VARCHAR},
+		#{map.isPublish},
+		#{map.content,jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<insert id="insertVersionContent" useGeneratedKeys="true" keyProperty="map.id">
+		insert into [Config].[dbo].[dc_sys_versionUpdateRecord] (
+		 title, time, briefContents, detailContents, versionNum,
+		  triggered, isPublish
+		)values(
+		#{map.title,jdbcType=VARCHAR},
+	    #{map.time,jdbcType=VARCHAR},
+	    #{map.briefContents,jdbcType=VARCHAR},
+	    #{map.detailContents,jdbcType=VARCHAR},
+	    #{map.versionNum,jdbcType=VARCHAR},
+	    #{map.triggered,jdbcType=VARCHAR},
+	    #{map.isPublish,jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<update id="updateFaqContent">
+		update [Config]..dc_server_faqcontent set 
+		fid = #{map.fid},
+		title =	#{map.title,jdbcType=VARCHAR},
+		colorClass = #{map.colorClass,jdbcType=VARCHAR},
+		<!-- itemOrderby = #{map.itemOrderby}, -->
+		lastModifyTime = getdate(),
+		isOpen = #{map.isOpen,jdbcType=VARCHAR},
+		isPublish = #{map.isPublish},
+		content = #{map.content,jdbcType=VARCHAR}
+		where id = #{map.id}
+	</update>
+	
+	<update id="updateVersionContent">
+		update [Config].[dbo].[dc_sys_versionUpdateRecord] 
+	  set title = #{map.title,jdbcType=VARCHAR},
+	  time = #{map.time,jdbcType=VARCHAR},
+	  briefContents = #{map.briefContents,jdbcType=VARCHAR},
+	  detailContents = #{map.detailContents,jdbcType=VARCHAR},
+	  versionNum = #{map.versionNum,jdbcType=VARCHAR},
+	  triggered = #{map.triggered,jdbcType=VARCHAR},
+	  isPublish = #{map.isPublish,jdbcType=VARCHAR}
+		where id = #{map.id}
+	</update>
+	
+	<select id="selectFaqInfo" resultType="java.util.HashMap">
+		select * From (
+		select ROW_NUMBER()over(order by a.id,b.itemOrderby)
+		ROWNUM,
+        b.id, a.title, a.iconClass,
+		a.isDefault,a.rowState,
+		b.fid, b.title subtitle, b.colorClass,
+		b.itemOrderby,
+		convert(varchar(11),b.lastModifyTime,120) lastModifyTime,
+		b.isPublish,
+		b.hits,
+		b.[content],
+		b.rowState status
+		from
+		[Config]..dc_server_faqtype a
+		left join [Config]..dc_server_faqcontent
+		b
+		on a.id = b.fid and b.rowstate > -1) t
+		<include refid="basicPaging" />
+	</select>
+	
+	<select id="selectFaqInfoCount" resultType="java.lang.Integer">
+		select count(1)
+		from
+		[Config]..dc_server_faqtype a
+		left join [Config]..dc_server_faqcontent
+		b
+		on a.id = b.fid and b.rowstate >-1
+	</select>
+
+	<select id="selectDetail" resultType="java.util.HashMap">
+		select
+		feedback.*,
+		isnull(customstr,'') customstring,
+		convert(varchar(11),feedback.createTime,120) feedbackTime
+		,sub.id
+		subId,sub.handler,
+		convert(varchar(11),sub.lastTime,120)
+		lastTime,sub.remark,
+		case when sub.status = 1 then '已处理'
+		else '未处理' end
+		[status],
+		case when fbType = 0 then '数据问题' 
+		when fbType = 1 then '地图问题' 
+		when fbType = 2 then '产品建议及其他' 
+		else '其他' end 
+		type,
+		imgIds
+		From
+		[Config]..dc_usercenter_feedback feedback
+		left join
+		[Config]..dc_usercenter_feedback_sub sub
+		on feedback.id = sub.fid
+		where
+		feedback.id = #{id}
+	</select>
+
+	<!-- 可控的表使用*也无所谓 -->
+	<select id="selectFeedback" resultType="java.util.LinkedHashMap">
+		select * From (
+		select ROW_NUMBER()over(order by createTime desc)
+		ROWNUM,
+		feedback.*,
+		isnull(customstr,'') customstring,
+		case when fbType = 0 then '数据问题' 
+		when fbType = 1 then '地图问题' 
+		when fbType = 2 then '产品建议及其他' 
+		else '其他' end 
+		type,
+		convert(varchar(11),feedback.createTime,120)
+		feedbackTime
+		,sub.handler,sub.lastTime,sub.remark,
+		case when sub.status
+		= 1 then '已处理'
+		else '未处理' end [status]
+		From
+		[Config]..dc_usercenter_feedback feedback
+		left join
+		[Config]..dc_usercenter_feedback_sub sub
+		on feedback.id = sub.fid
+		where
+		1=1
+		<if test="map.time1 != ''">
+			and convert(char(10),createTime,120) >=
+			#{map.time1,jdbcType=VARCHAR}
+		</if>
+		<if test="map.time2 != ''">
+			and convert(char(10),createTime,120) <![CDATA[ <= ]]>
+			#{map.time2,jdbcType=VARCHAR}
+		</if>
+		<if test="map.status != ''">
+			<choose>
+				<when test="map.status == 1">
+					and status = 1
+				</when>
+				<when test="map.status == 0">
+					and status is null
+				</when>
+			</choose>
+		</if>
+		)t
+		<include refid="basicPaging" />
+	</select>
+
+	<select id="selectFeedbackCount" resultType="java.lang.Integer">
+		select count(1)
+		from
+		[Config]..dc_usercenter_feedback feedback
+		left join
+		[Config]..dc_usercenter_feedback_sub sub
+		on feedback.id = sub.fid
+		where
+		1=1
+		<if test="map.time1 != ''">
+			and convert(char(10),createTime,120) >=
+			#{map.time1,jdbcType=VARCHAR}
+		</if>
+		<if test="map.time2 != ''">
+			and convert(char(10),createTime,120) <![CDATA[ <= ]]>
+			#{map.time2,jdbcType=VARCHAR}
+		</if>
+		<if test="map.status != ''">
+			<choose>
+				<when test="map.status == 1">
+					and status = 1
+				</when>
+				<when test="map.status == 0">
+					and status is null
+				</when>
+			</choose>
+		</if>
+	</select>
+
+	<sql id="basicPaging">
+	 		<![CDATA[ where  ROWNUM <= #{map.length} ]]>
+		<if test="map.start != 0">
+			and ROWNUM > #{map.start}
+		</if>
+	</sql>
+
+	<insert id="insertSub">
+		insert into [Config]..dc_usercenter_feedback_sub(
+		fid, status, handler, remark, lastTime) values(
+		#{map.id},
+		1,
+		#{map.handler,jdbcType=VARCHAR},
+		#{map.remark,jdbcType=VARCHAR},
+		#{map.lastTime,jdbcType=VARCHAR}
+		)
+
+	</insert>
+
+	<update id="updateSub">
+		update
+		[Config]..dc_usercenter_feedback_sub
+		set handler
+		= #{map.handler,jdbcType=VARCHAR},
+		remark =
+		#{map.remark,jdbcType=VARCHAR},
+		lastTime =
+		#{map.lastTime,jdbcType=VARCHAR}
+		where fid = #{map.id}
+	</update>
+	
+	<update id="deleteFaqInfoById">
+		update [Config].[dbo].[dc_server_faqcontent] 
+		set rowstate = -1 where id = #{id}
+	</update>
+
+</mapper>
